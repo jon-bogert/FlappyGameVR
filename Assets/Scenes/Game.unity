@@ -1650,7 +1650,7 @@ MonoBehaviour:
   triggerThreshold: 50
   sidewaysMultiplier: 0.5
   hmdTransform: {fileID: 330585546}
-  aileronMode: 1
+  aileronMode: 0
   xForceMultiplier: 25
   thesholdAngle: 45
   pitchSpeed: 3.11
@@ -1854,7 +1854,7 @@ MonoBehaviour:
   triggerThreshold: 50
   sidewaysMultiplier: 0.5
   hmdTransform: {fileID: 330585546}
-  aileronMode: 1
+  aileronMode: 0
   xForceMultiplier: 25
   thesholdAngle: 45
   pitchSpeed: 3.11
