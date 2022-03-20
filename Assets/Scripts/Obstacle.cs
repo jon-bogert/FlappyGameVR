@@ -21,7 +21,7 @@ public class Obstacle : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         world = FindObjectOfType<World>();
-        forward.Set(0f, 0f, -forwardSpeed);
+        StartMovement();
         CheckPowerup();
     }
 
@@ -32,10 +32,10 @@ public class Obstacle : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (player.GetIsDead())
-        {
-            StopMovement();
-        }
+        // if (player.GetIsDead())
+        // {
+        //     StopMovement();
+        // }
         
         transform.position += forward * Time.fixedDeltaTime;
         // if (transform.position.z < -10)
@@ -53,6 +53,11 @@ public class Obstacle : MonoBehaviour
         forward = Vector3.zero;
     }
 
+    public void StartMovement()
+    {
+        forward.Set(0f, 0f, -forwardSpeed);
+    }
+
     void CheckPowerup()
     {
         int dice = Random.Range(1, 100);
@@ -60,7 +65,7 @@ public class Obstacle : MonoBehaviour
         {
             float hDisp = Random.Range(-horizontalRange, horizontalRange) * 1.75f;
             Vector3 spawnPos = new Vector3(transform.position.x + hDisp, transform.position.y, transform.position.z);
-            Debug.Log("Spawn Position X: " + spawnPos.x);
+            //Debug.Log("Spawn Position X: " + spawnPos.x);
             GameObject newPowerup = Instantiate(glidePrefab, spawnPos, Quaternion.identity);
             newPowerup.transform.parent = gameObject.transform;
             world.GlideInPlay();

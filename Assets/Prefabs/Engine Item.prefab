@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2813165034775194772}
   m_Layer: 0
   m_Name: Engine Item
-  m_TagString: Item
+  m_TagString: Item Glide
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

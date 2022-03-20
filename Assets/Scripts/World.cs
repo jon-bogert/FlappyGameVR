@@ -15,7 +15,7 @@ public class World : MonoBehaviour
 
     void Start()
     {
-        forward.Set(0f, 0f, -forwardSpeed);
+        StartMovement();
     }
     void FixedUpdate()
     {
@@ -25,8 +25,30 @@ public class World : MonoBehaviour
     public void StopMovement()
     {
         forward = Vector3.zero;
+        foreach (GameObject obstacle in obstacles)
+        {
+            obstacle.GetComponent<Obstacle>().StopMovement();
+        }
+    }
+    public void StartMovement()
+    {
+        forward.Set(0f, 0f, -forwardSpeed);
+        foreach (GameObject obstacle in obstacles)
+        {
+            obstacle.GetComponent<Obstacle>().StartMovement();
+        }
     }
 
+    public Vector3 GetForward()
+    {
+        return Vector3.forward;
+    }
+
+    public float GetCurrentMovement()
+    {
+        return -forward.z;
+    }
+    
     public void AddObstacle(GameObject gameObject)
     {
         obstacles.Add(gameObject);

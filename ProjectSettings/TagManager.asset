@@ -6,8 +6,9 @@ TagManager:
   tags:
   - Deadly
   - Checkpoint
-  - Item
   - Spawnable
+  - Item Glide
+  - Item Shield
   layers:
   - Default
   - TransparentFX

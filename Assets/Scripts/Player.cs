@@ -22,11 +22,14 @@ public class Player : MonoBehaviour
     [Header("Shield")]
     [SerializeField] bool sheildActive = false;
     [SerializeField] MeshRenderer shieldMesh;
+    [SerializeField] Collider sheildCollider;
+    [SerializeField] Collider playerCollider;
 
     GameData gameData;
     SceneLoader sceneLoader;
     World world;
     bool isDead = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +44,9 @@ public class Player : MonoBehaviour
     {
         //if (leftController.selectAction.action.ReadValue<float>() > 0.01f)
         shieldMesh.enabled = (sheildActive); // TODO - Remove from Update
+        sheildCollider.enabled = (sheildActive); // TODO - Remove from Update
+        playerCollider.enabled = (!sheildActive);// TODO - Remove from Update
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -56,6 +62,20 @@ public class Player : MonoBehaviour
             //Debug.Log("Dead");
             StartCoroutine(sceneLoader.ResetGame());
         }
+        else if (collision.gameObject.tag == "Deadly" && sheildActive)
+        {
+            //Debug.Log("Collision Enter");
+            world.StopMovement();
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "Deadly" && !isDead && world.GetCurrentMovement() == 0f)
+        {
+            //Debug.Log("Collision Exit");
+            world.StartMovement();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -64,10 +84,9 @@ public class Player : MonoBehaviour
         {
             gameData.AddToScore();
         }
-        if (other.gameObject.tag == "Item" && !isDead)
+        if (other.gameObject.tag == "Item Glide" && !isDead)
         {
-            StartCoroutine(GlideModeCoroutine()); // TODO - DO Better Check than "Item" tag
-            //Debug.Log("Item Triggered");
+            StartCoroutine(GlideModeCoroutine());
         }
     }
 
