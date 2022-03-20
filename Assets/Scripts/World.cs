@@ -7,11 +7,12 @@ public class World : MonoBehaviour
 {
     [SerializeField] float forwardSpeed = 1f;
     [SerializeField] int glideRespawnTime = 25;
+    [SerializeField] int shieldRespawnTime = 25;
 
     Vector3 forward;
     List<GameObject> obstacles = new List<GameObject>();
     bool glidePowerupInPlay = false;
-    bool sheildPowerUpInPlay = false;
+    bool shieldPowerUpInPlay = false;
 
     void Start()
     {
@@ -79,5 +80,22 @@ public class World : MonoBehaviour
     {
         yield return new WaitForSeconds(glideRespawnTime);
         glidePowerupInPlay = false;
+    }
+
+    public bool getIfShieldInPlay()
+    {
+        return shieldPowerUpInPlay;
+    }
+
+    public void ShieldInPlay()
+    {
+        shieldPowerUpInPlay = true;
+        StartCoroutine(ShieldRespawnTimer());
+    }
+
+    IEnumerator ShieldRespawnTimer()
+    {
+        yield return new WaitForSeconds(shieldRespawnTime);
+        shieldPowerUpInPlay = false;
     }
 }

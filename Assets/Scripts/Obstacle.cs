@@ -10,6 +10,7 @@ public class Obstacle : MonoBehaviour
 
     [Header("Power Ups")]
     [SerializeField] GameObject glidePrefab;
+    [SerializeField] GameObject shieldPrefab;
     [SerializeField] int horizontalRange = 5;
     
     Player player;
@@ -61,14 +62,27 @@ public class Obstacle : MonoBehaviour
     void CheckPowerup()
     {
         int dice = Random.Range(1, 100);
-        if (!world.GetIfGlideInPlay() && dice >= 50)
+        bool spawnItem = false;
+        GameObject spawnPrefab = glidePrefab;
+        if (!world.GetIfGlideInPlay() && dice >= 70)
+        {
+            spawnItem = true;
+            spawnPrefab = glidePrefab;
+            world.GlideInPlay();
+        }
+        else if (!world.getIfShieldInPlay() && dice <= 30)
+        {
+            spawnItem = true;
+            spawnPrefab = shieldPrefab;
+            world.ShieldInPlay();
+        }
+        if (spawnItem)
         {
             float hDisp = Random.Range(-horizontalRange, horizontalRange) * 1.75f;
             Vector3 spawnPos = new Vector3(transform.position.x + hDisp, transform.position.y, transform.position.z);
             //Debug.Log("Spawn Position X: " + spawnPos.x);
-            GameObject newPowerup = Instantiate(glidePrefab, spawnPos, Quaternion.identity);
+            GameObject newPowerup = Instantiate(spawnPrefab, spawnPos, Quaternion.identity);
             newPowerup.transform.parent = gameObject.transform;
-            world.GlideInPlay();
         }
     }
     

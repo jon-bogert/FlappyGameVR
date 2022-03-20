@@ -245,6 +245,8 @@ MonoBehaviour:
   forwardSpeed: 3
   glidePrefab: {fileID: 2813165034775194778, guid: c3d2ddb13a0ff0646b7e2df8fd7d21a0,
     type: 3}
+  shieldPrefab: {fileID: 5825848690180007600, guid: db85a1850c27e1e449bc77dbdba0145f,
+    type: 3}
   horizontalRange: 5
 --- !u!65 &949611135913007111
 BoxCollider:

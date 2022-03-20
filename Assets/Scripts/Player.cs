@@ -43,9 +43,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         //if (leftController.selectAction.action.ReadValue<float>() > 0.01f)
-        shieldMesh.enabled = (sheildActive); // TODO - Remove from Update
-        sheildCollider.enabled = (sheildActive); // TODO - Remove from Update
-        playerCollider.enabled = (!sheildActive);// TODO - Remove from Update
 
     }
 
@@ -84,9 +81,14 @@ public class Player : MonoBehaviour
         {
             gameData.AddToScore();
         }
-        if (other.gameObject.tag == "Item Glide" && !isDead)
+
+        else if (other.gameObject.tag == "Item Glide" && !isDead)
         {
             StartCoroutine(GlideModeCoroutine());
+        }
+        else if (other.gameObject.tag == "Item Shield" && !isDead)
+        {
+            StartCoroutine(ShieldModeCoroutine());
         }
     }
 
@@ -105,7 +107,7 @@ public class Player : MonoBehaviour
         return sheildActive;
     }
 
-    public IEnumerator GlideModeCoroutine()
+    IEnumerator GlideModeCoroutine()
     {
         glideMode = true;
         UpdateEngineMesh();
@@ -118,5 +120,21 @@ public class Player : MonoBehaviour
     {
         engineMeshLeft.enabled = glideMode;
         engineMeshRight.enabled = glideMode;
+    }
+
+    IEnumerator ShieldModeCoroutine()
+    {
+        sheildActive = true;
+        UpdateShieldMesh();
+        yield return new WaitForSeconds(15);
+        sheildActive = false;
+        UpdateShieldMesh();
+    }
+
+    void UpdateShieldMesh()
+    {
+        shieldMesh.enabled = (sheildActive);
+        sheildCollider.enabled = (sheildActive);
+        playerCollider.enabled = (!sheildActive);
     }
 }
