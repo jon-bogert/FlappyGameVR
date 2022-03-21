@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    [SerializeField] float forwardSpeed = 1f;
+    [SerializeField] float forwardSpeed = 3f;
     [SerializeField] int glideRespawnTime = 25;
     [SerializeField] int shieldRespawnTime = 25;
 
@@ -20,29 +20,29 @@ public class World : MonoBehaviour
     }
     void FixedUpdate()
     {
-        transform.position += forward * Time.fixedDeltaTime;
+        //transform.position += forward * Time.fixedDeltaTime;
     }
 
     public void StopMovement()
     {
         forward = Vector3.zero;
-        foreach (GameObject obstacle in obstacles)
-        {
-            obstacle.GetComponent<Obstacle>().StopMovement();
-        }
+        // foreach (GameObject obstacle in obstacles)
+        // {
+        //     obstacle.GetComponent<Obstacle>().StopMovement();
+        // }
     }
     public void StartMovement()
     {
         forward.Set(0f, 0f, -forwardSpeed);
-        foreach (GameObject obstacle in obstacles)
-        {
-            obstacle.GetComponent<Obstacle>().StartMovement();
-        }
+        // foreach (GameObject obstacle in obstacles)
+        // {
+        //     obstacle.GetComponent<Obstacle>().StartMovement();
+        // }
     }
 
     public Vector3 GetForward()
     {
-        return Vector3.forward;
+        return forward;
     }
 
     public float GetCurrentMovement()

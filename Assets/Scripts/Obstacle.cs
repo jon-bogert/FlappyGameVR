@@ -22,7 +22,7 @@ public class Obstacle : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         world = FindObjectOfType<World>();
-        StartMovement();
+        //StartMovement();
         CheckPowerup();
     }
 
@@ -37,8 +37,7 @@ public class Obstacle : MonoBehaviour
         // {
         //     StopMovement();
         // }
-        
-        transform.position += forward * Time.fixedDeltaTime;
+        transform.position += world.GetForward() * Time.fixedDeltaTime;
         // if (transform.position.z < -10)
         // {
         //     Destroy(this.gameObject);
