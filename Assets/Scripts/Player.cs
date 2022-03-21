@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -17,18 +20,23 @@ public class Player : MonoBehaviour
     [SerializeField] float glideModeDuration = 15f;
     [SerializeField] MeshRenderer engineMeshLeft;
     [SerializeField] MeshRenderer engineMeshRight;
-
+    
     [Space]
     [Header("Shield")]
-    [SerializeField] bool sheildActive = false;
+    [SerializeField] bool shieldActive = false;
     [SerializeField] MeshRenderer shieldMesh;
-    [SerializeField] Collider sheildCollider;
+    [SerializeField] Collider shieldCollider;
     [SerializeField] Collider playerCollider;
+    [SerializeField] InputActionReference activateShieldAction;
+    [SerializeField] int shieldMax = 15;
+    [SerializeField] int shieldMin = 5;
+    [SerializeField] Slider shieldSlider;
 
     GameData gameData;
     SceneLoader sceneLoader;
     World world;
     bool isDead = false;
+    int shieldValue = 0;
 
 
     // Start is called before the first frame update
@@ -37,6 +45,7 @@ public class Player : MonoBehaviour
         gameData = FindObjectOfType<GameData>();
         sceneLoader = FindObjectOfType<SceneLoader>();
         world = FindObjectOfType<World>();
+        activateShieldAction.action.performed += ActivateShield;
     }
 
     // Update is called once per frame
@@ -49,7 +58,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("Hit");
-        if (collision.gameObject.tag == "Deadly" && !sheildActive)
+        if (collision.gameObject.tag == "Deadly" && !shieldActive)
         {
             world.StopMovement();
             deathColor.enabled = true;
@@ -59,7 +68,7 @@ public class Player : MonoBehaviour
             //Debug.Log("Dead");
             StartCoroutine(sceneLoader.ResetGame());
         }
-        else if (collision.gameObject.tag == "Deadly" && sheildActive)
+        else if (collision.gameObject.tag == "Deadly" && shieldActive)
         {
             //Debug.Log("Collision Enter");
             world.StopMovement();
@@ -80,6 +89,8 @@ public class Player : MonoBehaviour
         if (other.gameObject.tag == "Checkpoint" && !isDead)
         {
             gameData.AddToScore();
+            if (shieldValue < shieldMax && !shieldActive) shieldValue++;
+            UpdateShieldSlider();
         }
 
         else if (other.gameObject.tag == "Item Glide" && !isDead)
@@ -88,7 +99,8 @@ public class Player : MonoBehaviour
         }
         else if (other.gameObject.tag == "Item Shield" && !isDead)
         {
-            StartCoroutine(ShieldModeCoroutine());
+            shieldValue = shieldMax;
+            UpdateShieldSlider();
         }
     }
 
@@ -104,7 +116,7 @@ public class Player : MonoBehaviour
 
     public bool GetSheildActive()
     {
-        return sheildActive;
+        return shieldActive;
     }
 
     IEnumerator GlideModeCoroutine()
@@ -124,17 +136,34 @@ public class Player : MonoBehaviour
 
     IEnumerator ShieldModeCoroutine()
     {
-        sheildActive = true;
+        shieldActive = true;
         UpdateShieldMesh();
-        yield return new WaitForSeconds(15);
-        sheildActive = false;
+        while (shieldValue > 0)
+        {
+            yield return new WaitForSeconds(1);
+            shieldValue--;
+            UpdateShieldSlider();
+        }
+        shieldActive = false;
         UpdateShieldMesh();
     }
 
     void UpdateShieldMesh()
     {
-        shieldMesh.enabled = (sheildActive);
-        sheildCollider.enabled = (sheildActive);
-        playerCollider.enabled = (!sheildActive);
+        shieldMesh.enabled = (shieldActive);
+        shieldCollider.enabled = (shieldActive);
+        playerCollider.enabled = (!shieldActive);
     }
+
+    void ActivateShield(InputAction.CallbackContext obj)
+    {
+        if (shieldActive || isDead || shieldValue < shieldMin) return;
+        StartCoroutine(ShieldModeCoroutine());
+    }
+
+    void UpdateShieldSlider()
+    {
+        shieldSlider.value = shieldValue;
+    }
+    
 }
