@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] float glideModeDuration = 15f;
     [SerializeField] MeshRenderer engineMeshLeft;
     [SerializeField] MeshRenderer engineMeshRight;
+    [SerializeField] Slider glideSlider;
     
     [Space]
     [Header("Shield")]
@@ -123,7 +124,15 @@ public class Player : MonoBehaviour
     {
         glideMode = true;
         UpdateEngineMesh();
-        yield return new WaitForSeconds(15);
+        int duration = (int)glideModeDuration;
+        glideSlider.value = duration;
+        while (duration > 0)
+        {
+            yield return new WaitForSeconds(1);
+            duration--;
+            glideSlider.value = duration;
+        }
+
         glideMode = false;
         UpdateEngineMesh();
     }
