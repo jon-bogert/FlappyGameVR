@@ -1,9 +1,17 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 public class SpawnPoint : MonoBehaviour
 {
+    public enum SpawnType
+    {
+        Obstacle,
+        Wall
+    }
+    
     [SerializeField] GameObject obstaclePrefab;
+    [SerializeField] GameObject wallPrefab;
     [SerializeField] Transform worldTransform;
     [SerializeField] int maxHeight = 10;
     [SerializeField] int minHeight = -10;
@@ -16,7 +24,8 @@ public class SpawnPoint : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         world = FindObjectOfType<World>();
-        
+
+        NewWall();
         NewObstacle();
         //StartCoroutine(SpawnTimer());
     }
@@ -34,6 +43,11 @@ public class SpawnPoint : MonoBehaviour
         GameObject newObstacle  = Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity);
         world.AddObstacle(newObstacle);
         //world.ListAllObjects();
+    }
+
+    void NewWall()
+    {
+        GameObject newWall = Instantiate(wallPrefab, transform.position, Quaternion.identity);
     }
     
     // IEnumerator SpawnTimer()
@@ -53,6 +67,11 @@ public class SpawnPoint : MonoBehaviour
         if (other.gameObject.tag == "Spawnable")
         {
             NewObstacle(); //TODO check type and spawn correct GameObject
+        }
+
+        if (other.gameObject.tag == "Wall")
+        {
+            NewWall();
         }
     }
 }

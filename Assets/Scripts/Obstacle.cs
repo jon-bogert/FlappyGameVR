@@ -15,6 +15,7 @@ public class Obstacle : MonoBehaviour
     
     Player player;
     World world;
+    SpawnPoint.SpawnType spawnType = SpawnPoint.SpawnType.Obstacle;
 
     Vector3 forward;
 
@@ -83,6 +84,11 @@ public class Obstacle : MonoBehaviour
             GameObject newPowerup = Instantiate(spawnPrefab, spawnPos, Quaternion.identity);
             newPowerup.transform.parent = gameObject.transform;
         }
+    }
+    
+    public SpawnPoint.SpawnType GetSpawnType()
+    {
+        return spawnType;
     }
     
 }

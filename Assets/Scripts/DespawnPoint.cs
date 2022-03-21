@@ -15,7 +15,7 @@ public class DespawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Spawnable")
+        if (other.gameObject.tag == "Spawnable" || other.gameObject.tag == "Wall")
         {
             world.RemoveObstacle(other.gameObject);
             Destroy(other.gameObject);

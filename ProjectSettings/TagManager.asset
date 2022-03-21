@@ -9,6 +9,7 @@ TagManager:
   - Spawnable
   - Item Glide
   - Item Shield
+  - Wall
   layers:
   - Default
   - TransparentFX
