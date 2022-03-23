@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.UI;
@@ -69,7 +70,7 @@ public class Player : MonoBehaviour
             phRight.DisableFlight();
             isDead = true;
             //Debug.Log("Dead");
-            StartCoroutine(sceneLoader.ResetGame());
+            StartCoroutine(ResetGame());
         }
         else if (collision.gameObject.tag == "Deadly" && shieldActive)
         {
@@ -105,6 +106,14 @@ public class Player : MonoBehaviour
             shieldValue = shieldMax;
             UpdateShieldSlider();
         }
+    }
+
+    IEnumerator ResetGame()
+    {
+        yield return new WaitForSeconds(5);
+        //Destroy(FindObjectOfType<GameData>());
+        FindObjectOfType<GameData>().Reset();
+        SceneManager.LoadScene(1);
     }
 
     public bool GetIsDead()
@@ -179,7 +188,8 @@ public class Player : MonoBehaviour
 
     void PauseGame(InputAction.CallbackContext obj)
     {
-        sceneLoader.MainMenu();
+        FindObjectOfType<PauseMenu>().ToggleMenu();
+        //sceneLoader.MainMenu();
     }
     
 }
