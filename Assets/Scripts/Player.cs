@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] PhysicsHand phRight;
     [SerializeField] ActionBasedController leftController;
     [SerializeField] ActionBasedController rightController;
+    [SerializeField] InputActionReference pauseAction;
 
     [Space]
     [Header("Glide Mode")]
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour
         sceneLoader = FindObjectOfType<SceneLoader>();
         world = FindObjectOfType<World>();
         activateShieldAction.action.performed += ActivateShield;
+        pauseAction.action.performed += PauseGame;
     }
 
     // Update is called once per frame
@@ -173,6 +175,11 @@ public class Player : MonoBehaviour
     void UpdateShieldSlider()
     {
         shieldSlider.value = shieldValue;
+    }
+
+    void PauseGame(InputAction.CallbackContext obj)
+    {
+        sceneLoader.MainMenu();
     }
     
 }
