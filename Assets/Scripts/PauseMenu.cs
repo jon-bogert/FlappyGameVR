@@ -13,9 +13,12 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject hudCanvas;
     
     bool gamePaused = false;
+    static int id = 0;
 
     void Start()
     {
+        id++;
+        Debug.Log("PauseMenu: Start " + id);
         gamePaused = false;
         Time.timeScale = 1f;
     }
@@ -68,7 +71,8 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        Time.timeScale = 1f;
+        //Time.timeScale = 1f;
+        Resume();
         SceneManager.LoadScene(0);
         //FindObjectOfType<SceneLoader>().MainMenu();
     }

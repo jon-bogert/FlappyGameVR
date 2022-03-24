@@ -52,6 +52,12 @@ public class Player : MonoBehaviour
         pauseAction.action.performed += PauseGame;
     }
 
+    void OnDestroy()
+    {
+        activateShieldAction.action.performed -= ActivateShield;
+        pauseAction.action.performed -= PauseGame;
+    }
+
     // Update is called once per frame
     void Update()
     {
