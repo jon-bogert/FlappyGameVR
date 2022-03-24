@@ -26,7 +26,7 @@ public class SpawnPoint : MonoBehaviour
         world = FindObjectOfType<World>();
 
         NewWall();
-        NewObstacle();
+        //NewObstacle(transform.position);
         //StartCoroutine(SpawnTimer());
     }
 
@@ -36,16 +36,16 @@ public class SpawnPoint : MonoBehaviour
 
     }
 
-    void NewObstacle()
+    public void NewObstacle(Vector3 pos)
     {
         int spawnHeight = Random.Range(minHeight, maxHeight);
-        Vector3 spawnPosition = new Vector3 (transform.position.x, transform.position.y + spawnHeight, transform.position.z);
+        Vector3 spawnPosition = new Vector3 (pos.x, pos.y + spawnHeight, pos.z);
         GameObject newObstacle  = Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity);
         world.AddObstacle(newObstacle);
         //world.ListAllObjects();
     }
 
-    void NewWall()
+    public void NewWall()
     {
         GameObject newWall = Instantiate(wallPrefab, transform.position, Quaternion.identity);
     }
@@ -66,7 +66,7 @@ public class SpawnPoint : MonoBehaviour
     {
         if (other.gameObject.tag == "Spawnable")
         {
-            NewObstacle(); //TODO check type and spawn correct GameObject
+            NewObstacle(transform.position);
         }
 
         if (other.gameObject.tag == "Wall")

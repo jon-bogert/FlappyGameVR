@@ -9,14 +9,13 @@ public class World : MonoBehaviour
     [SerializeField] int glideRespawnTime = 25;
     [SerializeField] int shieldRespawnTime = 25;
 
-    Vector3 forward;
+    Vector3 forward = Vector3.zero;
     List<GameObject> obstacles = new List<GameObject>();
     bool glidePowerupInPlay = false;
     bool shieldPowerUpInPlay = false;
 
     void Start()
     {
-        StartMovement();
     }
     void FixedUpdate()
     {

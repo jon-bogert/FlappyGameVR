@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameData : MonoBehaviour
 {
-    int currentScore;
+    int currentScore = 0;
+    int highScore = 0;
 
     private void Awake()
     {
         int numGameSessions = FindObjectsOfType<GameData>().Length;
         if (numGameSessions > 1)
         {
-            FindObjectOfType<GameData>().Reset();
             Destroy(gameObject);
         }
         else
@@ -24,26 +22,21 @@ public class GameData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ResetGameData();
+    }
+
+    public void ResetGameData()
+    {
+        Load();
         currentScore = 0;
         UpdateScore();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //UpdateScore();
-    }
-
-    public void Reset()
-    {
-        Start();
-    }
-
-    private void UpdateScore()
+    void UpdateScore()
     {
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            FindObjectOfType<UIUpdator>().UpdateScore(currentScore);
+            FindObjectOfType<UIUpdator>().UpdateScore(currentScore, highScore);
         }
     }
 
@@ -56,5 +49,31 @@ public class GameData : MonoBehaviour
     public int GetScore()
     {
         return currentScore;
+    }
+
+    public int GetHighScore()
+    {
+        Load();
+        return highScore;
+    }
+
+    public void CheckHighScore()
+    {
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            Save();
+            UpdateScore();
+        }
+    }
+
+    void Save()
+    {
+        PlayerPrefs.SetInt("High Score", highScore);
+    }
+
+    void Load()
+    {
+        highScore = PlayerPrefs.GetInt("High Score", 0);
     }
 }

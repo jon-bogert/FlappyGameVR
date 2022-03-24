@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] ActionBasedController leftController;
     [SerializeField] ActionBasedController rightController;
     [SerializeField] InputActionReference pauseAction;
+    [SerializeField] InputActionReference homeAction;
 
     [Space]
     [Header("Glide Mode")]
@@ -50,19 +51,18 @@ public class Player : MonoBehaviour
         world = FindObjectOfType<World>();
         activateShieldAction.action.performed += ActivateShield;
         pauseAction.action.performed += PauseGame;
+        homeAction.action.performed += HomeButtonPress;
+        gameData.ResetGameData();
+        //FindObjectOfType<UIUpdator>().UpdateScore(); // Debug
+
+        GetComponent<Rigidbody>().useGravity = false;
     }
 
     void OnDestroy()
     {
         activateShieldAction.action.performed -= ActivateShield;
         pauseAction.action.performed -= PauseGame;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //if (leftController.selectAction.action.ReadValue<float>() > 0.01f)
-
+        homeAction.action.performed -= HomeButtonPress;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -99,6 +99,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.tag == "Checkpoint" && !isDead)
         {
             gameData.AddToScore();
+            //FindObjectOfType<UIUpdator>().UpdateScore(); // Debug
             if (shieldValue < shieldMax && !shieldActive) shieldValue++;
             UpdateShieldSlider();
         }
@@ -116,9 +117,10 @@ public class Player : MonoBehaviour
 
     IEnumerator ResetGame()
     {
+        gameData.CheckHighScore();
         yield return new WaitForSeconds(5);
         //Destroy(FindObjectOfType<GameData>());
-        FindObjectOfType<GameData>().Reset();
+        FindObjectOfType<GameData>().ResetGameData();
         SceneManager.LoadScene(1);
     }
 
@@ -196,6 +198,14 @@ public class Player : MonoBehaviour
     {
         FindObjectOfType<PauseMenu>().ToggleMenu();
         //sceneLoader.MainMenu();
+    }
+
+    void HomeButtonPress(InputAction.CallbackContext obj)
+    {
+        if (!FindObjectOfType<PauseMenu>().GetGamePaused())
+        {
+            FindObjectOfType<PauseMenu>().ToggleMenu();
+        }
     }
     
 }

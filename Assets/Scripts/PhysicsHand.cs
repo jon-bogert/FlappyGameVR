@@ -38,11 +38,16 @@ public class PhysicsHand : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         canFly = true;
-        transform.position = target.position;
-        transform.rotation = target.rotation;
+        ResetPosition();
         myRigidbody = GetComponent<Rigidbody>();
         myRigidbody.maxAngularVelocity = float.PositiveInfinity;
         previousPosition = transform.position;
+    }
+
+    public void ResetPosition()
+    {
+        transform.position = target.position;
+        transform.rotation = target.rotation;
     }
 
     // Update is called once per frame
@@ -70,6 +75,12 @@ public class PhysicsHand : MonoBehaviour
 
         if ((force.y > triggerThreshold) && canFly)
         {
+            if (!playerRigidbody.useGravity)
+            {
+                playerRigidbody.useGravity = true;
+                FindObjectOfType<World>().StartMovement();
+                FindObjectOfType<UIUpdator>().DisableBeginMsg();
+            }
             Vector3 upForce = Vector3.zero; ;
             float sideForce = (transform.position.x < hmdTransform.position.x) ? force.y * sidewaysMultiplier : -force.y * sidewaysMultiplier;
             upForce.Set(sideForce, force.y, 0f);

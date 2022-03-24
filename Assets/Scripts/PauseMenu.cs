@@ -13,19 +13,16 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject hudCanvas;
     
     bool gamePaused = false;
-    static int id = 0;
 
     void Start()
     {
-        id++;
-        Debug.Log("PauseMenu: Start " + id);
         gamePaused = false;
         Time.timeScale = 1f;
     }
 
     public void ToggleMenu()
     {
-        
+        FindObjectOfType<UIUpdator>().ToggleBeginMsg();
         if (gamePaused)
         {
             Resume();
@@ -38,6 +35,10 @@ public class PauseMenu : MonoBehaviour
 
     void Resume()
     {
+        foreach (PhysicsHand ph in FindObjectsOfType<PhysicsHand>())
+        {
+            ph.ResetPosition();
+        }
         hudCanvas.SetActive(true);
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -56,12 +57,10 @@ public class PauseMenu : MonoBehaviour
 
     void SetControllerProperties(bool isEnabled)
     {
-        //Debug.Log("Enable: " + isEnabled + " | Time Scale: " + Time.timeScale);
         rightHandController.GetComponent<LineRenderer>().enabled = isEnabled;
         rightHandController.GetComponent<XRInteractorLineVisual>().enabled = isEnabled;
         leftHandController.GetComponent<LineRenderer>().enabled = isEnabled;
         leftHandController.GetComponent<XRInteractorLineVisual>().enabled = isEnabled;
-        Debug.Log("HUD UI " + hudCanvas.activeSelf);
     }
 
     public bool GetGamePaused()
@@ -71,10 +70,8 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        //Time.timeScale = 1f;
         Resume();
         SceneManager.LoadScene(0);
-        //FindObjectOfType<SceneLoader>().MainMenu();
     }
     
 }

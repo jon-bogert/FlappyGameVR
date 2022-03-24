@@ -10,7 +10,7 @@ public class SceneLoader : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         //Destroy(FindObjectOfType<GameData>());
-        FindObjectOfType<GameData>().Reset();
+        //FindObjectOfType<GameData>().Reset();
         SceneManager.LoadScene(1);
     }
 

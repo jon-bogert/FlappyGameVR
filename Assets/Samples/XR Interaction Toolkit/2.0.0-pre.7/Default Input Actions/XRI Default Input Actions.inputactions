@@ -1107,6 +1107,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Home",
+                    "type": "Button",
+                    "id": "9b69882a-505b-4626-b033-fcb76d133e76",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1151,6 +1160,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a667d18-362e-434d-ae55-667c4cae8216",
+                    "path": "<XRController>{RightHand}/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Home",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
