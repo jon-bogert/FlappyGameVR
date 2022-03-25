@@ -11,6 +11,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject rightHandController;
     [SerializeField] GameObject leftHandController;
     [SerializeField] GameObject hudCanvas;
+    [SerializeField] GameObject rightTorch;
+    [SerializeField] GameObject leftTorch;
     
     bool gamePaused = false;
 
@@ -61,6 +63,8 @@ public class PauseMenu : MonoBehaviour
         rightHandController.GetComponent<XRInteractorLineVisual>().enabled = isEnabled;
         leftHandController.GetComponent<LineRenderer>().enabled = isEnabled;
         leftHandController.GetComponent<XRInteractorLineVisual>().enabled = isEnabled;
+        rightTorch.SetActive(isEnabled);
+        leftTorch.SetActive(isEnabled);
     }
 
     public bool GetGamePaused()

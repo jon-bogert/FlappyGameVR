@@ -117,10 +117,12 @@ public class Player : MonoBehaviour
 
     IEnumerator ResetGame()
     {
+        Time.timeScale = 0.5f;
         gameData.CheckHighScore();
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(5 * Time.timeScale);
         //Destroy(FindObjectOfType<GameData>());
         FindObjectOfType<GameData>().ResetGameData();
+        Time.timeScale = 1f;
         SceneManager.LoadScene(1);
     }
 

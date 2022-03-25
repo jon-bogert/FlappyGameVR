@@ -166,6 +166,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: cave_wall_rough
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d69ce5b1c12b57c46978965e3ad65445,
+        type: 3}
+      propertyPath: m_TagString
+      value: Deadly
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d69ce5b1c12b57c46978965e3ad65445, type: 3}
 --- !u!4 &2537199448906429135 stripped
