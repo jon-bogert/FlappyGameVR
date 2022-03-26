@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO.Enumeration;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -39,6 +40,7 @@ public class Player : MonoBehaviour
     GameData gameData;
     SceneLoader sceneLoader;
     World world;
+    AudioManager audioManager;
     bool isDead = false;
     int shieldValue = 0;
 
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
         gameData = FindObjectOfType<GameData>();
         sceneLoader = FindObjectOfType<SceneLoader>();
         world = FindObjectOfType<World>();
+        audioManager = FindObjectOfType<AudioManager>();
         activateShieldAction.action.performed += ActivateShield;
         pauseAction.action.performed += PauseGame;
         homeAction.action.performed += HomeButtonPress;
@@ -74,8 +77,10 @@ public class Player : MonoBehaviour
             deathColor.enabled = true;
             phLeft.DisableFlight();
             phRight.DisableFlight();
+            if (!isDead) audioManager.Play("Player Death");
             isDead = true;
             //Debug.Log("Dead");
+            
             StartCoroutine(ResetGame());
         }
         else if (collision.gameObject.tag == "Deadly" && shieldActive)
@@ -98,18 +103,27 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.tag == "Checkpoint" && !isDead)
         {
+            audioManager.Play("Checkpoint");
             gameData.AddToScore();
             //FindObjectOfType<UIUpdator>().UpdateScore(); // Debug
-            if (shieldValue < shieldMax && !shieldActive) shieldValue++;
+            if (shieldValue < shieldMax && !shieldActive)
+            {
+                shieldValue++;
+                if (shieldValue == 5) audioManager.Play("Shield Ready");
+            }
             UpdateShieldSlider();
         }
 
         else if (other.gameObject.tag == "Item Glide" && !isDead)
         {
+            //audioManager.Play("Shield Powerup");
+            Destroy(other.gameObject);
             StartCoroutine(GlideModeCoroutine());
         }
         else if (other.gameObject.tag == "Item Shield" && !isDead)
         {
+            audioManager.Play("Shield Powerup");
+            Destroy(other.gameObject);
             shieldValue = shieldMax;
             UpdateShieldSlider();
         }
@@ -143,19 +157,21 @@ public class Player : MonoBehaviour
 
     IEnumerator GlideModeCoroutine()
     {
+        audioManager.Play("Engine");
         glideMode = true;
         UpdateEngineMesh();
         int duration = (int)glideModeDuration;
         glideSlider.value = duration;
         while (duration > 0)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.9f);
             duration--;
             glideSlider.value = duration;
         }
 
         glideMode = false;
         UpdateEngineMesh();
+        if (world.GetCurrentMovement() == 0)  world.StartMovement();
     }
 
     void UpdateEngineMesh()
@@ -168,12 +184,25 @@ public class Player : MonoBehaviour
     {
         shieldActive = true;
         UpdateShieldMesh();
-        while (shieldValue > 0)
+        
+        audioManager.Play("Shield Start");
+        yield return new WaitForSeconds(1);
+        shieldValue--;
+        UpdateShieldSlider();
+        
+        while (shieldValue > 1)
         {
+            audioManager.Play("Shield Loop");
             yield return new WaitForSeconds(1);
             shieldValue--;
             UpdateShieldSlider();
         }
+        audioManager.SetLoop("Shield Loop", false);
+        audioManager.Play("Shield End");
+        yield return new WaitForSeconds(1);
+        shieldValue--;
+        UpdateShieldSlider();
+        
         shieldActive = false;
         UpdateShieldMesh();
     }
@@ -199,7 +228,7 @@ public class Player : MonoBehaviour
     void PauseGame(InputAction.CallbackContext obj)
     {
         FindObjectOfType<PauseMenu>().ToggleMenu();
-        //sceneLoader.MainMenu();
+        audioManager.Play("Button Click");
     }
 
     void HomeButtonPress(InputAction.CallbackContext obj)

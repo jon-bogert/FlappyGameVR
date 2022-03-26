@@ -16,13 +16,19 @@ public class SceneLoader : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        StartCoroutine(LoadScene(1));
         //FindObjectOfType<GameData>().Reset();
     }
     
     public void MainMenu()
     {
         //FindObjectOfType<PauseMenu>().ToggleMenu(); //reset from pause menu
-        SceneManager.LoadScene(0);
+        StartCoroutine(LoadScene(0));
+    }
+
+    IEnumerator LoadScene(int index)
+    {
+        yield return new WaitForSeconds(0.3f);
+        SceneManager.LoadScene(index);
     }
 }

@@ -1,8 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PhysicsHand : MonoBehaviour
 {
+    [Header("General")]
+    [SerializeField] AudioClip flapSound;
+
     [Header("PID")]
     [SerializeField] float frequency = 50f;
     [SerializeField] float damping = 1f;
@@ -33,6 +37,9 @@ public class PhysicsHand : MonoBehaviour
     Player player;
     Vector3 previousPosition;
     bool canFly;
+    bool isFlapping = false;
+
+    AudioSource audioSource;
 
     void Start()
     {
@@ -42,6 +49,7 @@ public class PhysicsHand : MonoBehaviour
         myRigidbody = GetComponent<Rigidbody>();
         myRigidbody.maxAngularVelocity = float.PositiveInfinity;
         previousPosition = transform.position;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void ResetPosition()
@@ -71,7 +79,7 @@ public class PhysicsHand : MonoBehaviour
         Vector3 force = displacementFromResting * climbForce;
         float drag = GetDrag();
 
-        
+
 
         if ((force.y > triggerThreshold) && canFly)
         {
@@ -81,12 +89,19 @@ public class PhysicsHand : MonoBehaviour
                 FindObjectOfType<World>().StartMovement();
                 FindObjectOfType<UIUpdator>().DisableBeginMsg();
             }
-            Vector3 upForce = Vector3.zero; ;
-            float sideForce = (transform.position.x < hmdTransform.position.x) ? force.y * sidewaysMultiplier : -force.y * sidewaysMultiplier;
+
+            Vector3 upForce = Vector3.zero;
+            ;
+            float sideForce = (transform.position.x < hmdTransform.position.x)
+                ? force.y * sidewaysMultiplier
+                : -force.y * sidewaysMultiplier;
             upForce.Set(sideForce, force.y, 0f);
             playerRigidbody.AddForce(upForce, ForceMode.Acceleration);
             playerRigidbody.AddForce(drag * -playerRigidbody.velocity * climbDrag, ForceMode.Acceleration);
+            if (!isFlapping) audioSource.Play();
+            isFlapping = true;
         }
+        else if (force.y < 0) isFlapping = false;
     }
 
     private float GetDrag()
