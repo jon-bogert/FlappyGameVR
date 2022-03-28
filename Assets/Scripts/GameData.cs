@@ -6,6 +6,8 @@ public class GameData : MonoBehaviour
     int currentScore = 0;
     int highScore = 0;
 
+    public bool musicOn = true;
+
     private void Awake()
     {
         int numGameSessions = FindObjectsOfType<GameData>().Length;
@@ -22,8 +24,15 @@ public class GameData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //ResetScore(); // for dubug
         ResetGameData();
     }
+
+    void ResetScore()
+    {
+        PlayerPrefs.SetInt("High Score", 0);
+    }
+    
 
     public void ResetGameData()
     {
@@ -61,6 +70,7 @@ public class GameData : MonoBehaviour
     {
         if (currentScore > highScore)
         {
+            FindObjectOfType<AudioManager>().Play("High Score");
             highScore = currentScore;
             Save();
             UpdateScore();

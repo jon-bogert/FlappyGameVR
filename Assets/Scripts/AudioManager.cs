@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    Sound FindSound(string name)
+    public Sound FindSound(string name)
     {
         Sound sound = Array.Find(sounds, sound => sound.name == name);
         if (sound == null)
@@ -49,5 +49,21 @@ public class AudioManager : MonoBehaviour
     public Sound[] GetSounds()
     {
         return sounds;
+    }
+
+    public void Pause()
+    {
+        foreach (Sound sound in sounds)
+        {
+            sound.source.Pause();
+        }
+    }
+
+    public void UnPause()
+    {
+        foreach (Sound sound in sounds)
+        {
+            sound.source.UnPause();
+        }
     }
 }

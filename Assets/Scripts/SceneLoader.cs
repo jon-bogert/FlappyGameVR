@@ -17,6 +17,7 @@ public class SceneLoader : MonoBehaviour
     public void StartGame()
     {
         StartCoroutine(LoadScene(1));
+        FindObjectOfType<MusicManager>().UpdateMusic(true);
         //FindObjectOfType<GameData>().Reset();
     }
     
@@ -24,11 +25,13 @@ public class SceneLoader : MonoBehaviour
     {
         //FindObjectOfType<PauseMenu>().ToggleMenu(); //reset from pause menu
         StartCoroutine(LoadScene(0));
+        FindObjectOfType<MusicManager>().UpdateMusic(false);
     }
 
     IEnumerator LoadScene(int index)
     {
         yield return new WaitForSeconds(0.3f);
         SceneManager.LoadScene(index);
+        FindObjectOfType<MusicManager>().UpdateMusic(index != 0);
     }
 }

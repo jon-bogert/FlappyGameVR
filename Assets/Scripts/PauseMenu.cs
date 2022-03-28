@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject leftTorch;
     
     bool gamePaused = false;
-    List<Sound> pausedSounds;
+    List<AudioSource> pausedSounds;
 
     void Start()
     {
@@ -38,15 +38,7 @@ public class PauseMenu : MonoBehaviour
 
     void Resume()
     {
-        foreach (Sound sound in pausedSounds)
-        {
-            sound.source.Play();
-            pausedSounds.Remove(sound);
-        }
-        foreach (PhysicsHand ph in FindObjectsOfType<PhysicsHand>())
-        {
-            ph.ResetPosition();
-        }
+        FindObjectOfType<AudioManager>().UnPause();
         hudCanvas.SetActive(true);
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -56,14 +48,7 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
-        foreach (Sound sound in FindObjectOfType<AudioManager>().GetSounds())
-        {
-            if (sound.source.isPlaying)
-            {
-                sound.source.Pause();
-                pausedSounds.Add(sound);
-            }
-        }
+        FindObjectOfType<AudioManager>().Pause();
         hudCanvas.SetActive(false);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
@@ -96,6 +81,7 @@ public class PauseMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         SceneManager.LoadScene(0);
+        FindObjectOfType<MusicManager>().UpdateMusic(false);
     }
     
 }
