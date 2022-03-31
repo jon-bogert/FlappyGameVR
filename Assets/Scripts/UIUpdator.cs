@@ -20,6 +20,11 @@ public class UIUpdator : MonoBehaviour
         highScoreTextPause.text = "High Score: " + highScore;
     }
 
+    public void TutorialUpdateScore(int score)
+    {
+        scoreText.text = "Score: " + score;
+    }
+
     public void ToggleBeginMsg()
     {
         if (startTextActive)

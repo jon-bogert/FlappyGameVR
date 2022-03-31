@@ -74,6 +74,10 @@ public class PauseMenu : MonoBehaviour
     public void MainMenu()
     {
         Resume();
+        
+        if (FindObjectOfType<TutorialController>() != null)
+            Destroy(FindObjectOfType<TutorialController>().gameObject);
+        
         StartCoroutine(MenuDelay());
     }
 

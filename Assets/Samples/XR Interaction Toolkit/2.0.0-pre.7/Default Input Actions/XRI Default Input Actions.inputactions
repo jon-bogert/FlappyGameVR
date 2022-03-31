@@ -1165,6 +1165,28 @@
                 },
                 {
                     "name": "",
+                    "id": "90bf82a6-6427-4d76-9252-36a4525fe318",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f1f0aee9-aab2-485d-a657-d8bae5d21a9a",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0a667d18-362e-434d-ae55-667c4cae8216",
                     "path": "<XRController>{RightHand}/menu",
                     "interactions": "",

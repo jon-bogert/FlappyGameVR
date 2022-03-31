@@ -24,7 +24,8 @@ public class Obstacle : MonoBehaviour
         player = FindObjectOfType<Player>();
         world = FindObjectOfType<World>();
         //StartMovement();
-        CheckPowerup();
+        if (FindObjectsOfType<TutorialController>().Length == 0)
+            CheckPowerup();
     }
 
     // private void OnDestroy()

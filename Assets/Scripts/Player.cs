@@ -10,6 +10,9 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] bool tutorialMode = false;
+    
+    [Space]
     [SerializeField] MeshRenderer deathColor;
     [SerializeField] PhysicsHand phLeft;
     [SerializeField] PhysicsHand phRight;
@@ -22,9 +25,10 @@ public class Player : MonoBehaviour
     [Header("Glide Mode")]
     [SerializeField] bool glideMode = false;
     [SerializeField] float glideModeDuration = 15f;
-    [SerializeField] MeshRenderer engineMeshLeft;
-    [SerializeField] MeshRenderer engineMeshRight;
+    [SerializeField] GameObject engineMeshLeft;
+    [SerializeField] GameObject engineMeshRight;
     [SerializeField] Slider glideSlider;
+    [SerializeField] SpriteRenderer engineIcon;
     
     [Space]
     [Header("Shield")]
@@ -81,6 +85,7 @@ public class Player : MonoBehaviour
             isDead = true;
             //Debug.Log("Dead");
             
+            if (tutorialMode) FindObjectOfType<TutorialController>().ResetAttributes();
             StartCoroutine(ResetGame());
         }
         else if (collision.gameObject.tag == "Deadly" && shieldActive)
@@ -104,8 +109,10 @@ public class Player : MonoBehaviour
         if (other.gameObject.tag == "Checkpoint" && !isDead)
         {
             audioManager.Play("Checkpoint");
-            gameData.AddToScore();
-            //FindObjectOfType<UIUpdator>().UpdateScore(); // Debug
+            
+            if (!tutorialMode) gameData.AddToScore();
+            else FindObjectOfType<TutorialController>().AddPoints();
+            
             if (shieldValue < shieldMax && !shieldActive)
             {
                 shieldValue++;
@@ -132,12 +139,12 @@ public class Player : MonoBehaviour
     IEnumerator ResetGame()
     {
         Time.timeScale = 0.5f;
-        gameData.CheckHighScore();
+        if (!tutorialMode) gameData.CheckHighScore();
         yield return new WaitForSeconds(5 * Time.timeScale);
         //Destroy(FindObjectOfType<GameData>());
         FindObjectOfType<GameData>().ResetGameData();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public bool GetIsDead()
@@ -159,6 +166,7 @@ public class Player : MonoBehaviour
     {
         audioManager.Play("Engine");
         glideMode = true;
+        engineIcon.enabled = true;
         UpdateEngineMesh();
         int duration = (int)glideModeDuration;
         glideSlider.value = duration;
@@ -170,14 +178,15 @@ public class Player : MonoBehaviour
         }
 
         glideMode = false;
+        engineIcon.enabled = false;
         UpdateEngineMesh();
         if (world.GetCurrentMovement() == 0)  world.StartMovement();
     }
 
     void UpdateEngineMesh()
     {
-        engineMeshLeft.enabled = glideMode;
-        engineMeshRight.enabled = glideMode;
+        engineMeshLeft.SetActive(glideMode);
+        engineMeshRight.SetActive(glideMode);
     }
 
     IEnumerator ShieldModeCoroutine()
@@ -205,6 +214,15 @@ public class Player : MonoBehaviour
         
         shieldActive = false;
         UpdateShieldMesh();
+        
+        //Tutorial Stuff
+        if (tutorialMode)
+        {
+            if (FindObjectOfType<TutorialController>().GetTutorialIndex() == 2)
+            {
+                StartCoroutine(FindObjectOfType<TutorialController>().NextPart());
+            }
+        }
     }
 
     void UpdateShieldMesh()
@@ -216,7 +234,11 @@ public class Player : MonoBehaviour
 
     void ActivateShield(InputAction.CallbackContext obj)
     {
-        if (shieldActive || isDead || shieldValue < shieldMin) return;
+        if (shieldActive || isDead || shieldValue < shieldMin)
+        {
+            if (shieldValue < shieldMin) audioManager.Play("Shield Not Ready");
+            return;
+        }
         StartCoroutine(ShieldModeCoroutine());
     }
 

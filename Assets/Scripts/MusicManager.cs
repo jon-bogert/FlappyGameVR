@@ -6,6 +6,7 @@ using UnityEngine.XR;
 
 public class MusicManager : MonoBehaviour
 {
+    [SerializeField] bool playMusic = true;
     [SerializeField] Sound[] sounds;
     Sound melody;
     
@@ -54,9 +55,12 @@ public class MusicManager : MonoBehaviour
     {
         FindObjectOfType<GameData>().musicOn = true;
         melody = FindSound("Melody");
-        Play("Background");
-        UpdateMusic((SceneManager.GetActiveScene().buildIndex != 0));
-        Play("Melody");
+        if (playMusic)
+        {
+            Play("Background");
+            UpdateMusic((SceneManager.GetActiveScene().buildIndex != 0));
+            Play("Melody");
+        }
     }
 
     public void UpdateMusic(bool melodyEnabled)

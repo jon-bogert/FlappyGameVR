@@ -34,4 +34,10 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(index);
         FindObjectOfType<MusicManager>().UpdateMusic(index != 0);
     }
+
+    public void Tutorial()
+    {
+        StartCoroutine(LoadScene(2));
+        FindObjectOfType<MusicManager>().UpdateMusic(true);
+    }
 }
