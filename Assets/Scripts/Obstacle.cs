@@ -65,13 +65,13 @@ public class Obstacle : MonoBehaviour
         int dice = Random.Range(1, 100);
         bool spawnItem = false;
         GameObject spawnPrefab = glidePrefab;
-        if (!world.GetIfGlideInPlay() && dice >= 85)
+        if (!world.GetIfGlideInPlay() && dice >= 70)
         {
             spawnItem = true;
             spawnPrefab = glidePrefab;
             world.GlideInPlay();
         }
-        else if (!world.getIfShieldInPlay() && dice <= 10)
+        else if (!world.getIfShieldInPlay() && dice <= 30)
         {
             spawnItem = true;
             spawnPrefab = shieldPrefab;
